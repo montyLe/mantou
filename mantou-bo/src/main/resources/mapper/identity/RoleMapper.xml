@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mantou.mantoubo.basic.mapper.identity.RoleMapper">
+    <resultMap id="roleMap" type="com.mantou.mantoubo.basic.entity.identity.Role">
+        <id column="ROLE_ID" property="id"/>
+        <result column="PARENT_ID" property="parentId"/>
+        <result column="ROLE_NAME" property="roleName"/>
+        <result column="GEN_TIME" property="genTime"/>
+        <result column="DESCRIPTION" property="description"/>
+        <collection property="Permissions" ofType="com.mantou.mantoubo.basic.entity.identity.Permission">
+            <id column="PERMISSION_ID" property="id"/>
+            <result column="PERMISSION" property="permission"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryRoleById" parameterType="java.lang.String" resultMap="roleMap">
+        SELECT
+            C.ROLE_ID,
+            A.PARENT_ID,
+            A.ROLE_NAME,
+            A.GEN_TIME,
+            A.DESCRIPTION,
+            C.PERMISSION_ID,
+            B.PERMISSION
+        FROM
+            ROLE A,
+            PERMISSION B,
+            ROLE_PERMISSION C
+        WHERE
+            A.ID = C.ROLE_ID
+        AND
+            B.ID = C.PERMISSION_ID
+        AND
+            A.ID = #{id}
+    </select>
+
+</mapper>
